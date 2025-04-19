@@ -1,4 +1,4 @@
-package com.example;
+package servlets;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -15,8 +15,7 @@ public class MainServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        req.setAttribute("name", "World");
-        req.getRequestDispatcher("mypage.jsp").forward(req, resp);
+        resp.sendRedirect(req.getContextPath() + "/filelist");
     }
 
     @Override

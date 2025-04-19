@@ -1,14 +1,15 @@
-package com.example;
+package servlets;
 
+import accounts.AccountService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -17,10 +18,19 @@ import java.util.Date;
 
 @WebServlet("/filelist")
 public class FileListServlet extends HttpServlet {
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+        HttpSession session = req.getSession();
+        if (AccountService.getUserBySessionId(session.getId()) == null) {
+            resp.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
+//        if (session == null || session.getAttribute("username") == null) {
+//            resp.sendRedirect(req.getContextPath() + "/login");
+//            return;
+//        }
+
         String path = req.getParameter("path");
 
         if (path == null || path.isEmpty()) {
