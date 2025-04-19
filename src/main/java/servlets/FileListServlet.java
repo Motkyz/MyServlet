@@ -1,6 +1,7 @@
 package servlets;
 
 import accounts.AccountService;
+import accounts.UserProfile;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -15,9 +16,12 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Objects;
 
 @WebServlet("/filelist")
 public class FileListServlet extends HttpServlet {
+    private static final String defaultPath = "C:\\Users\\Matvey\\IdeaProjects\\servlet\\users";
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -26,20 +30,25 @@ public class FileListServlet extends HttpServlet {
             resp.sendRedirect(req.getContextPath() + "/login");
             return;
         }
-//        if (session == null || session.getAttribute("username") == null) {
-//            resp.sendRedirect(req.getContextPath() + "/login");
-//            return;
-//        }
+
+        String username = AccountService.getUserBySessionId(session.getId()).getLogin();
 
         String path = req.getParameter("path");
 
-        if (path == null || path.isEmpty()) {
-            path = System.getProperty("user.home");
+        if (path == null || path.isEmpty() || !path.contains(defaultPath)) {
+            path = defaultPath + "\\" + username;
         }
+        System.out.println(path);
 
         File dir = new File(path);
+        if (!dir.exists()) {
+            dir.mkdir();
+        }
 
         String parentDir = dir.getParent();
+        if (Objects.equals(parentDir, defaultPath)) {
+            parentDir = null;
+        }
 
         File[] files = dir.listFiles(new FileFilter() {
             @Override
@@ -66,7 +75,8 @@ public class FileListServlet extends HttpServlet {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
         String creationDate = dateFormat.format(new Date());
 
-        req.setAttribute("currentDir", path.replace('\\','/'));
+        String currentDir = path.replace(defaultPath, "").replace('\\','/');
+        req.setAttribute("currentDir", currentDir);
         req.setAttribute("files", files);
         req.setAttribute("creationDate", creationDate);
         req.setAttribute("parentDir", parentDir);

@@ -9,6 +9,13 @@
     <title>Java Servlet App</title>
 </head>
 <body>
+
+<div style="text-align: right; margin: 10px;">
+    <form action="/servlet/logout" method="post">
+        <button type="submit">Выйти из аккаунта</button>
+    </form>
+</div>
+
 <h3 class="Date">${creationDate}</h3>
 <h1 class="currentDir">${currentDir}</h1>
 

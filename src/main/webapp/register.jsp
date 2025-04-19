@@ -16,11 +16,11 @@
     <form action="/servlet/login" method="post">
         <input type="text" name="username" placeholder="Имя пользователя" required>
         <input type="password" name="password" placeholder="Пароль" required>
-        <input type="email" name="email" placeholder="Электронная почта" required>
+        <input type="email" name="e-mail" placeholder="Электронная почта" required>
         <input type="submit" value="Зарегистрироваться">
     </form>
     <div class="link">
-        <p>Уже есть аккаунт? <a href="login.jsp" class="button">Аторизоваться</a></p>
+        <p>Уже есть аккаунт? <a href="login.jsp" class="button">Авторизоваться</a></p>
     </div>
 </div>
 </body>

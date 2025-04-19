@@ -21,9 +21,6 @@
     <div class="link">
         <p>Нет аккаунта? <a href="register.jsp" class="button">Зарегистрироваться</a></p>
     </div>
-    <div class="error">
-
-    </div>
 </div>
 </body>
 </html>

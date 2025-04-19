@@ -16,32 +16,34 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        HttpSession session = req.getSession();
-//        if (session.getAttribute("user") == null) {
-//            resp.sendRedirect("/login");
-//        }
 
         req.getRequestDispatcher("login.jsp").forward(req, resp);
-        return;
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        String username = req.getParameter("login");
-        String password = req.getParameter("pass");
-        String email = req.getParameter("email");
+
+        HttpSession session = req.getSession();
+
+        String username = req.getParameter("username");
+        String password = req.getParameter("password");
+        String email = req.getParameter("e-mail");
 
         if (AccountService.getUserByLogin(username) == null){
             req.getRequestDispatcher("register.jsp").forward(req, resp);
         }
+        else{
+            UserProfile userProfile = AccountService.getUserByLogin(username);
+            AccountService.addSession(session.getId(), userProfile);
+            resp.sendRedirect(req.getContextPath() + "/filelist");
+            return;
+        }
 
         UserProfile profile = new UserProfile(username, password, email);
-        AccountService.addNewUser(profile); //TODO
+        AccountService.addNewUser(profile);
         AccountService.addSession(req.getSession().getId(), profile);
-        HttpSession session = req.getSession();
-        System.out.println("УСПЕХ");
+
         resp.sendRedirect(req.getContextPath() + "/filelist");
-        //req.getRequestDispatcher("filelist.jsp").forward(req, resp);
     }
 }
