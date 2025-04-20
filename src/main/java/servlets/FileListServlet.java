@@ -25,18 +25,27 @@ public class FileListServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+
         HttpSession session = req.getSession();
         if (AccountService.getUserBySessionId(session.getId()) == null) {
             resp.sendRedirect(req.getContextPath() + "/login");
             return;
         }
 
+        UserProfile user = AccountService.getUserBySessionId(session.getId());
+        System.out.println("\nВход в проводник:");
+        System.out.println("Сессия: " + session.getId());
+        System.out.println("Логин: " + user.getLogin());
+        System.out.println("Пароль: " + user.getPass());
+        System.out.println("Почта: " + user.getEmail());
+
         String username = AccountService.getUserBySessionId(session.getId()).getLogin();
 
         String path = req.getParameter("path");
 
-        if (path == null || path.isEmpty() || !path.contains(defaultPath)) {
-            path = defaultPath + "\\" + username;
+        String userDirectory = defaultPath + "\\" + username;
+        if (path == null || path.isEmpty() || !path.contains(userDirectory)) {
+            path = userDirectory;
         }
         System.out.println(path);
 

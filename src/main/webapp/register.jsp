@@ -13,7 +13,7 @@
 <body>
 <div class="registration-container">
     <h2>Регистрация</h2>
-    <form action="/servlet/login" method="post">
+    <form action="/servlet/register" method="post">
         <input type="text" name="username" placeholder="Имя пользователя" required>
         <input type="password" name="password" placeholder="Пароль" required>
         <input type="email" name="e-mail" placeholder="Электронная почта" required>

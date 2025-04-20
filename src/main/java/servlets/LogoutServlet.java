@@ -19,6 +19,7 @@ public class LogoutServlet  extends HttpServlet {
 
         resp.sendRedirect(req.getContextPath() + "/filelist");
     }
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {

@@ -28,22 +28,17 @@ public class LoginServlet extends HttpServlet {
 
         String username = req.getParameter("username");
         String password = req.getParameter("password");
-        String email = req.getParameter("e-mail");
 
-        if (AccountService.getUserByLogin(username) == null){
+        UserProfile userProfile = AccountService.getUserByLogin(username);
+        if (userProfile == null){
             req.getRequestDispatcher("register.jsp").forward(req, resp);
         }
-        else{
-            UserProfile userProfile = AccountService.getUserByLogin(username);
+        else if (userProfile.getPass().equals(password)){
             AccountService.addSession(session.getId(), userProfile);
             resp.sendRedirect(req.getContextPath() + "/filelist");
-            return;
         }
-
-        UserProfile profile = new UserProfile(username, password, email);
-        AccountService.addNewUser(profile);
-        AccountService.addSession(req.getSession().getId(), profile);
-
-        resp.sendRedirect(req.getContextPath() + "/filelist");
+        else{
+            doGet(req, resp);
+        }
     }
 }
