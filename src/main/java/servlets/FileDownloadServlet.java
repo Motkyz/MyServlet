@@ -5,6 +5,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,11 +16,26 @@ import java.net.URLEncoder;
 
 @WebServlet("/filedownload")
 public class FileDownloadServlet extends HttpServlet {
+    private static final String defaultPath = "C:\\Users\\Matvey\\IdeaProjects\\servlet\\users";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+
+        HttpSession session = req.getSession(false);
+        if (session == null || session.getAttribute("username") == null) {
+            resp.sendRedirect(req.getContextPath() + "/login");
+        }
+
+        String username = (String) session.getAttribute("username");
+        String userDirectory = defaultPath + "\\" + username;
+
         String downloadedFilePath = URLDecoder.decode(req.getParameter("fileDownloadPath"), "UTF-8");
+
+        if (downloadedFilePath == null || !downloadedFilePath.startsWith(userDirectory)) {
+            return;
+        }
+
         File file = new File(downloadedFilePath);
         String fileName = file.getName();
         String encodedFileName = URLEncoder.encode(fileName, "UTF-8");

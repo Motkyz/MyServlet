@@ -1,5 +1,7 @@
 package accounts;
 
+import jakarta.servlet.http.HttpSession;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,17 +15,5 @@ public class AccountService {
 
     public static UserProfile getUserByLogin(String login) {
         return loginToProfile.get(login);
-    }
-
-    public static UserProfile getUserBySessionId(String sessionId) {
-        return sessionIdToProfile.get(sessionId);
-    }
-
-    public static void addSession(String sessionId, UserProfile userProfile) {
-        sessionIdToProfile.put(sessionId, userProfile);
-    }
-
-    public static void deleteSession(String sessionId) {
-        sessionIdToProfile.remove(sessionId);
     }
 }

@@ -17,6 +17,12 @@ public class LoginServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
+        HttpSession session = req.getSession(false);
+        if (session != null && session.getAttribute("username") != null) {
+            resp.sendRedirect(req.getContextPath() + "/files");
+            return;
+        }
+
         req.getRequestDispatcher("login.jsp").forward(req, resp);
     }
 
@@ -34,7 +40,7 @@ public class LoginServlet extends HttpServlet {
             req.getRequestDispatcher("register.jsp").forward(req, resp);
         }
         else if (userProfile.getPass().equals(password)){
-            AccountService.addSession(session.getId(), userProfile);
+            session.setAttribute("username", username);
             resp.sendRedirect(req.getContextPath() + "/filelist");
         }
         else{

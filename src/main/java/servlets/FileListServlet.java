@@ -26,25 +26,18 @@ public class FileListServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        HttpSession session = req.getSession();
-        if (AccountService.getUserBySessionId(session.getId()) == null) {
+        HttpSession session = req.getSession(false);
+        if (session == null || session.getAttribute("username") == null) {
             resp.sendRedirect(req.getContextPath() + "/login");
             return;
         }
 
-        UserProfile user = AccountService.getUserBySessionId(session.getId());
-        System.out.println("\nВход в проводник:");
-        System.out.println("Сессия: " + session.getId());
-        System.out.println("Логин: " + user.getLogin());
-        System.out.println("Пароль: " + user.getPass());
-        System.out.println("Почта: " + user.getEmail());
-
-        String username = AccountService.getUserBySessionId(session.getId()).getLogin();
+        String username = session.getAttribute("username").toString();
 
         String path = req.getParameter("path");
 
         String userDirectory = defaultPath + "\\" + username;
-        if (path == null || path.isEmpty() || !path.contains(userDirectory)) {
+        if (path == null || path.isEmpty() || !path.startsWith(userDirectory)) {
             path = userDirectory;
         }
         System.out.println(path);
@@ -89,6 +82,7 @@ public class FileListServlet extends HttpServlet {
         req.setAttribute("files", files);
         req.setAttribute("creationDate", creationDate);
         req.setAttribute("parentDir", parentDir);
+        req.setAttribute("username", username);
         req.getRequestDispatcher("filelist.jsp").forward(req, resp);
     }
 }

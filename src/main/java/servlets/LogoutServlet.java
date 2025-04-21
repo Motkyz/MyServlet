@@ -17,15 +17,18 @@ public class LogoutServlet  extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        resp.sendRedirect(req.getContextPath() + "/filelist");
+        doPost(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        HttpSession session = req.getSession();
-        AccountService.deleteSession(session.getId());
+        HttpSession session = req.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+
         resp.sendRedirect(req.getContextPath() + "/filelist");
     }
 }

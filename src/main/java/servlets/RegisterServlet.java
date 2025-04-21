@@ -44,7 +44,7 @@ public class RegisterServlet extends HttpServlet {
 
         UserProfile newUser = new UserProfile(name, pass, email);
         AccountService.addNewUser(newUser);
-        AccountService.addSession(session.getId(), newUser);
+        session.setAttribute("username", newUser.getLogin());
 
         resp.sendRedirect(req.getContextPath() + "/filelist");
     }
