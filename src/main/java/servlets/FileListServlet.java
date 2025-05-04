@@ -43,6 +43,13 @@ public class FileListServlet extends HttpServlet {
         System.out.println(path);
 
         File dir = new File(path);
+
+        System.out.println(dir.getCanonicalPath());
+        if(!path.equals(dir.getCanonicalPath())){
+            path = userDirectory;
+            dir = new File(path);
+        }
+
         if (!dir.exists()) {
             dir.mkdir();
         }
@@ -52,23 +59,15 @@ public class FileListServlet extends HttpServlet {
             parentDir = null;
         }
 
-        File[] files = dir.listFiles(new FileFilter() {
-            @Override
-            public boolean accept(File dir) {
-                return !(dir.isDirectory() && dir.listFiles() == null);
-            }
-        });
+        File[] files = dir.listFiles(dir1 -> !(dir1.isDirectory() && dir1.listFiles() == null));
 
-        Arrays.sort(files, new Comparator<File>() {
-            @Override
-            public int compare(File f1, File f2) {
-                if (f1.isDirectory() && !f2.isDirectory()) {
-                    return -1;
-                } else if (!f1.isDirectory() && f2.isDirectory()) {
-                    return 1;
-                } else {
-                    return f1.getName().compareTo(f2.getName());
-                }
+        Arrays.sort(files, (File f1, File f2) -> {
+            if (f1.isDirectory() && !f2.isDirectory()) {
+                return -1;
+            } else if (!f1.isDirectory() && f2.isDirectory()) {
+                return 1;
+            } else {
+                return f1.getName().compareTo(f2.getName());
             }
         });
 

@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 @WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
@@ -32,18 +33,31 @@ public class RegisterServlet extends HttpServlet {
         String pass = req.getParameter("password");
         String email = req.getParameter("e-mail");
 
-        UserProfile userProfile = AccountService.getUserByLogin(name);
+        UserProfile userProfile = null;
+        try {
+            userProfile = AccountService.getUserByLogin(name);
+        } catch (SQLException e) {
+            doGet(req, resp);
+            return;
+        }
+
         if (name == null || name.isEmpty() || pass == null || pass.isEmpty() || email == null || email.isEmpty()) {
             doGet(req, resp);
             return;
         }
+
         if (userProfile != null) {
             doGet(req, resp);
             return;
         }
 
         UserProfile newUser = new UserProfile(name, pass, email);
-        AccountService.addNewUser(newUser);
+        try {
+            AccountService.addNewUser(newUser);
+        } catch (SQLException e) {
+            doGet(req, resp);
+            return;
+        }
         session.setAttribute("username", newUser.getLogin());
 
         resp.sendRedirect(req.getContextPath() + "/filelist");

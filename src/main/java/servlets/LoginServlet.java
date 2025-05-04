@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
@@ -35,7 +36,14 @@ public class LoginServlet extends HttpServlet {
         String username = req.getParameter("username");
         String password = req.getParameter("password");
 
-        UserProfile userProfile = AccountService.getUserByLogin(username);
+        UserProfile userProfile = null;
+        try {
+            userProfile = AccountService.getUserByLogin(username);
+        } catch (SQLException e) {
+            doGet(req, resp);
+            return;
+        }
+
         if (userProfile == null){
             req.getRequestDispatcher("register.jsp").forward(req, resp);
         }
