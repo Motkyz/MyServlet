@@ -1,34 +1,38 @@
 package accounts;
 
 import dbService.DBService;
-import dbService.executor.Executor;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.sql.SQLException;
 
 public class AccountService {
-    private static final Executor executor = new Executor(DBService.getMysqlConnection());
+    private static DBService dbService = new DBService();
 
     public static void addNewUser(UserProfile userProfile) throws SQLException {
-        String insert = "INSERT INTO users (login, password, email) values (\'" + userProfile.getLogin() + "\', \'"
-                + userProfile.getPass() + "\', \'" + userProfile.getEmail() + "\')";
-
-        executor.execUpdate(insert);
+        try {
+            Session session = dbService.sessionFactory.openSession();
+            Transaction tx = session.beginTransaction();
+            session.save(userProfile);
+            tx.commit();
+            session.close();
+        } catch(HibernateException e){
+            throw new HibernateException(e);
+        }
     }
 
     public static UserProfile getUserByLogin(String login) throws SQLException {
-        String query = "SELECT * FROM users WHERE login = '" + login + "'";
-        UserProfile userProfile = executor.execQuery(query, resultSet -> {
-            if (resultSet.next()) {
-                String login1 = resultSet.getString("login");
-                String pass = resultSet.getString("password");
-                String email = resultSet.getString("email");
+        try{
+            Session session = dbService.sessionFactory.openSession();
+            Transaction tx = session.beginTransaction();
+            UserProfile userProfile = session.load(UserProfile.class, login);
+            tx.commit();
+            session.close();
 
-                return new UserProfile(login1, pass, email);
-            }
-
-            return null;
-        });
-
-        return userProfile;
+            return userProfile;
+        }catch (HibernateException e){
+            throw new HibernateException(e);
+        }
     }
 }
