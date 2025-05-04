@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.hibernate.HibernateException;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -36,7 +37,7 @@ public class RegisterServlet extends HttpServlet {
         UserProfile userProfile = null;
         try {
             userProfile = AccountService.getUserByLogin(name);
-        } catch (SQLException e) {
+        } catch (HibernateException e) {
             doGet(req, resp);
             return;
         }
@@ -54,7 +55,7 @@ public class RegisterServlet extends HttpServlet {
         UserProfile newUser = new UserProfile(name, pass, email);
         try {
             AccountService.addNewUser(newUser);
-        } catch (SQLException e) {
+        } catch (HibernateException e) {
             doGet(req, resp);
             return;
         }

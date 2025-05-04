@@ -16,15 +16,10 @@ public class DBService {
     private static final String hibernate_show_sql = "true";
     private static final String hibernate_hbm2ddl_auto = "update";
 
-    public final SessionFactory sessionFactory;
-
-    public DBService() {
-        Configuration configuration = getMySqlConfiguration();
-        sessionFactory = createSessionFactory(configuration);
-    }
+    public static final SessionFactory sessionFactory = createSessionFactory(getMySqlConfiguration());
 
     @SuppressWarnings("UnusedDeclaration")
-    private Configuration getMySqlConfiguration() {
+    private static Configuration getMySqlConfiguration() {
         Dotenv dotenv = Dotenv.load();
         Configuration configuration = new Configuration();
         configuration.addAnnotatedClass(UserProfile.class);

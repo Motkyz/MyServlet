@@ -5,14 +5,11 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import java.sql.SQLException;
-
 public class AccountService {
-    private static DBService dbService = new DBService();
 
-    public static void addNewUser(UserProfile userProfile) throws SQLException {
+    public static void addNewUser(UserProfile userProfile) {
         try {
-            Session session = dbService.sessionFactory.openSession();
+            Session session = DBService.sessionFactory.openSession();
             Transaction tx = session.beginTransaction();
             session.save(userProfile);
             tx.commit();
@@ -22,9 +19,9 @@ public class AccountService {
         }
     }
 
-    public static UserProfile getUserByLogin(String login) throws SQLException {
+    public static UserProfile getUserByLogin(String login) {
         try{
-            Session session = dbService.sessionFactory.openSession();
+            Session session = DBService.sessionFactory.openSession();
             Transaction tx = session.beginTransaction();
             UserProfile userProfile = session.load(UserProfile.class, login);
             tx.commit();

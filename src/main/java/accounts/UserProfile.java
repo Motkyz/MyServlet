@@ -9,7 +9,7 @@ public class UserProfile {
     @Id
     @Column(name="id")
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private int id;
+    private long id;
     @Column(name="login", unique=true, nullable=false)
     private String login;
     @Column(name="password", nullable=false)
@@ -23,7 +23,6 @@ public class UserProfile {
         this.email = email;
     }
 
-    @SuppressWarnings("UnusedDeclaration")
     public UserProfile() {}
 
     public String getLogin() {
