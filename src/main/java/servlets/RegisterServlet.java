@@ -38,6 +38,7 @@ public class RegisterServlet extends HttpServlet {
         try {
             userProfile = AccountService.getUserByLogin(name);
         } catch (HibernateException e) {
+            System.out.println(e.getMessage());
             doGet(req, resp);
             return;
         }
@@ -56,6 +57,7 @@ public class RegisterServlet extends HttpServlet {
         try {
             AccountService.addNewUser(newUser);
         } catch (HibernateException e) {
+            System.out.println(e.getMessage());
             doGet(req, resp);
             return;
         }

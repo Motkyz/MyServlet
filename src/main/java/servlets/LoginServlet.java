@@ -41,6 +41,7 @@ public class LoginServlet extends HttpServlet {
         try {
             userProfile = AccountService.getUserByLogin(username);
         } catch (HibernateException e) {
+            System.out.println(e.getMessage());
             doGet(req, resp);
             return;
         }

@@ -9,9 +9,9 @@ public class AccountService {
 
     public static void addNewUser(UserProfile userProfile) {
         try {
-            Session session = DBService.sessionFactory.openSession();
+            Session session = DBService.getSessionFactory().openSession();
             Transaction tx = session.beginTransaction();
-            session.save(userProfile);
+            session.persist(userProfile);
             tx.commit();
             session.close();
         } catch(HibernateException e){
@@ -21,9 +21,9 @@ public class AccountService {
 
     public static UserProfile getUserByLogin(String login) {
         try{
-            Session session = DBService.sessionFactory.openSession();
+            Session session = DBService.getSessionFactory().openSession();
             Transaction tx = session.beginTransaction();
-            UserProfile userProfile = session.load(UserProfile.class, login);
+            UserProfile userProfile = session.byNaturalId(UserProfile.class).using("login", login).load();
             tx.commit();
             session.close();
 

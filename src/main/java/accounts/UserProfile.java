@@ -1,6 +1,7 @@
 package accounts;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.NaturalId;
 
 @Entity
 @Table(name="users")
@@ -10,10 +11,14 @@ public class UserProfile {
     @Column(name="id")
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private long id;
+
+    @NaturalId
     @Column(name="login", unique=true, nullable=false)
     private String login;
+
     @Column(name="password", nullable=false)
     private String pass;
+
     @Column(name="email", unique=true, nullable=false)
     private String email;
 
